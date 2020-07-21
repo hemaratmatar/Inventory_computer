@@ -1,0 +1,20 @@
+{
+  "files": {
+    "main.css": "/static/css/main.1fa53ece.chunk.css",
+    "main.js": "/static/js/main.0b63e8c9.chunk.js",
+    "main.js.map": "/static/js/main.0b63e8c9.chunk.js.map",
+    "runtime~main.js": "/static/js/runtime~main.e0f1d930.js",
+    "runtime~main.js.map": "/static/js/runtime~main.e0f1d930.js.map",
+    "static/css/2.90fb3305.chunk.css": "/static/css/2.90fb3305.chunk.css",
+    "static/js/2.e98b1008.chunk.js": "/static/js/2.e98b1008.chunk.js",
+    "static/js/2.e98b1008.chunk.js.map": "/static/js/2.e98b1008.chunk.js.map",
+    "index.html": "/index.html",
+    "precache-manifest.a5e249632b78d47c65791e81d6d2af4b.js": "/precache-manifest.a5e249632b78d47c65791e81d6d2af4b.js",
+    "service-worker.js": "/service-worker.js",
+    "static/css/2.90fb3305.chunk.css.map": "/static/css/2.90fb3305.chunk.css.map",
+    "static/css/main.1fa53ece.chunk.css.map": "/static/css/main.1fa53ece.chunk.css.map",
+    "static/media/React-icon.png": "/static/media/React-icon.47ce6e77.png",
+    "static/media/login.png": "/static/media/login.e42d39ed.png",
+    "static/media/logoBanner.png": "/static/media/logoBanner.7b0bb2f3.png"
+  }
+}
