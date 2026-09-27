@@ -3,3 +3,4 @@ dist
 .npm-cache
 .slide-reference
 .env.local
+.npm-cache
