@@ -1,68 +1,85 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Inventory Computer
 
-## Available Scripts
+เว็บจัดการครุภัณฑ์คอมพิวเตอร์ ออกแบบตามสไลด์ 7–9 และใช้ React, Ant Design, Firebase Authentication และ Cloud Firestore
 
-In the project directory, you can run:
+## เริ่มใช้งาน
 
-### `npm start`
+โปรเจกต์ล็อก runtime เป็น Node.js `24.21.0` และ npm `11.19.0` ทุก environment ต้องใช้สองเวอร์ชันนี้ให้ตรงกัน
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+ถ้าใช้ nvm ให้สลับเวอร์ชันก่อนติดตั้ง:
 
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
+```bash
+nvm install 24.21.0
+nvm use 24.21.0
+npm ci
+npm start
+```
 
-### `npm test`
+`npm ci` จะติดตั้ง dependency ตาม `package-lock.json` แบบตรงเวอร์ชันทุกครั้ง ส่วน `npm start`, `npm run dev`, `npm run build` และ `npm run preview` จะตรวจ runtime ก่อนเริ่มทำงาน
 
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```bash
+npm ci
+npm start
+```
 
-### `npm run build`
+สร้างไฟล์สำหรับ deploy ด้วยคำสั่ง:
 
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```bash
+npm run build
+```
 
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
+## Firebase Authentication
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+เปิดใช้งานผู้ให้บริการต่อไปนี้ใน Firebase Console > Authentication > Sign-in method:
 
-### `npm run eject`
+- Email/Password
+- Google
+- Facebook
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+สำหรับ Facebook ให้เพิ่ม App ID และ App secret จาก Meta for Developers ใน Firebase Console และเพิ่ม `https://inven-com.firebaseapp.com/__/auth/handler` ใน Meta > Facebook Login > Valid OAuth Redirect URIs
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+เมื่อนำขึ้น Netlify ให้เพิ่มโดเมน `ชื่อเว็บ.netlify.app` ใน Firebase Console > Authentication > Settings > Authorized domains ไม่เช่นนั้น Google และ Facebook จะขึ้นข้อผิดพลาด `auth/unauthorized-domain`
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+ค่า Firebase เดิมถูกใช้เป็น fallback สำหรับโปรเจกต์นี้ หากต้องการตั้งค่าผ่าน Netlify Environment variables ให้เพิ่ม:
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+```text
+VITE_FIREBASE_API_KEY
+VITE_FIREBASE_AUTH_DOMAIN
+VITE_FIREBASE_PROJECT_ID
+VITE_FIREBASE_STORAGE_BUCKET
+VITE_FIREBASE_MESSAGING_SENDER_ID
+VITE_FIREBASE_APP_ID
+VITE_FIRESTORE_PRODUCTS_COLLECTION
+VITE_FIRESTORE_PEOPLE_COLLECTION
+VITE_FIRESTORE_ROOMS_COLLECTION
+```
 
-## Learn More
+## Cloud Firestore
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+หน้า Dashboard subscribe ข้อมูลแบบเรียลไทม์จาก 3 collections ที่มีอยู่ในโปรเจกต์ `inven-com`:
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+```text
+product-list: id, numlist, perid, pername, productname, roomid, roomname, status
+per-list: numlist, perid, pername, position, roomid, roomname, status
+room-list: perid, pername, point, roomid, roomname
+```
 
-### Code Splitting
+หาก document ใน `product-list` ไม่มีฟิลด์ `id` ระบบจะใช้ Firestore Document ID แทน สามารถเปลี่ยนชื่อ collection ผ่าน environment variables ทั้งสามค่าได้
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
+Security Rules อยู่ใน `firestore.rules` และอนุญาตให้ผู้ใช้ที่เข้าสู่ระบบแล้วอ่าน เพิ่ม แก้ไข และลบข้อมูลใน `product-list`, `per-list` และ `room-list` ได้ หากแก้ Rules ให้ deploy ด้วย Firebase CLI:
 
-### Analyzing the Bundle Size
+```bash
+firebase deploy --only firestore:rules --project inven-com
+```
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
+## Deploy บน Netlify
 
-### Making a Progressive Web App
+ไฟล์ `netlify.toml` ตั้งค่าไว้แล้ว:
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
+- Build command: `npm run build`
+- Publish directory: `dist`
+- Node.js: `24.21.0`
+- npm: `11.19.0`
+- SPA redirect: `/* /index.html 200`
 
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+เชื่อม repository กับ Netlify แล้วกด Deploy ได้ทันที จากนั้นเพิ่ม Netlify domain ใน Firebase Authorized domains ตามขั้นตอนด้านบน
